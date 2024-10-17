@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react";
-
+import React from 'react';
+import useAxiosCommon from './useAxiosCommon';
+import { useQuery } from '@tanstack/react-query';
 
 const useCard = () => {
-    const [pets,setPets]=useState([])
-    useEffect(() => {
-        fetch('http://localhost:5000/pets')
-            .then(res => res.json())
-        .then(data=>setPets(data))
-    }, [])
-    return [pets]
+  const axiosCommon = useAxiosCommon();
+
+  const { data: pets = [],isLoading } = useQuery({
+    queryKey: ["pets"],
+    queryFn: async () => {
+      const { data } = await axiosCommon.get("/pets");
+      
+      return data;
+    },
+  });
+ return [pets,isLoading];
 };
 
-export default useCard;
+export default useCard; 

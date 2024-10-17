@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import { useContext } from "react";
 import { AuthContext } from "./AuthProvider";
 import { Navigate, useLocation } from "react-router-dom";
-
-const PrivateRoute = ({ children, allowedRoles }) => {
+//, allowedRoles 
+const PrivateRoute = ({ children}) => {
   const { user, loading } = useContext(AuthContext);
   const location = useLocation();
   
@@ -15,23 +15,15 @@ console.log(user);
       </div>
     );
   }
-
-  if (!loading && user && !allowedRoles.includes(user?.role)) {
-  
-      return <Navigate to="/login" state={{ from: location }} />;
-  }
-    return children;
+  // && !allowedRoles.includes(user?.role)
+  // {
+  //   return <Navigate to="/login" state={{ from: location }} />;
+  // }
+   if (user) return children;
+   return <Navigate to="/login" state={location.pathname} replace="true" />;
 
 
 };
 
-PrivateRoute.propTypes = {
-  children: PropTypes.node.isRequired,
-  allowedRoles: PropTypes.arrayOf(PropTypes.string),
-};
-
-PrivateRoute.defaultProps = {
-  allowedRoles: ["user", "admin"], // default allows both roles
-};
 
 export default PrivateRoute;

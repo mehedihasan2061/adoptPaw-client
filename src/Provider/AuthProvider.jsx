@@ -57,13 +57,14 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setLoading(true)
+      setLoading(false)
       console.log("on Auth state change", currentUser);
-      fetch(`http://localhost:5000/users/${currentUser.uid}`)
-        .then(res => res.json())
-        .then((data) => {
-         setUser(data);
-      })
+      setUser(currentUser)
+      // fetch(`https://adopt-paw-server-e3ype2o73-mehedihasan2061s-projects.vercel.app/users/${currentUser.uid}`)
+      //   .then(res => res.json())
+      //   .then((data) => {
+      //    setUser(data);
+      // })
       // setUser(currentUser.uid);
       setLoading(false);
     });
@@ -82,6 +83,7 @@ const AuthProvider = ({ children }) => {
     googleLogin,
     gitHubLogin,
     loading,
+    
   };
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>

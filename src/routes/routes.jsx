@@ -17,78 +17,93 @@ import ErrorPage from "../pages/ErrorPage";
 import PrivateRoute from "../Provider/PrivateRoute";
 
 const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <Main></Main>,
-        errorElement:<ErrorPage></ErrorPage>,
-        children: [
-            {
-                path: "/",
-                element:<Home></Home>
-            },
-            {
-                path: "/all-pets",
-                element:<AllPet></AllPet>
-            },
-            {
-                path: "/donation-campaign",
-                element:<DonationCampaign></DonationCampaign>
-            },
-            {
-                path: "/pet/:id",
-                element: <SinglePet></SinglePet>,
-               
-            },
-            {
-                path: "/register",
-                element: <Register></Register>,
-               
-            },
-            {
-                path: "/login",
-                element: <Login></Login>,
-               
-            }
-        ]
-    },
-    {
-        path: "/dashboard",
-        element:
-        <Dashboard></Dashboard>,
-        errorElement:<ErrorPage></ErrorPage>,
-        children: [
-            {
-                path: "/dashboard/add-pet",
-                element:<PrivateRoute allowedRoles={["user","admin"]}><AddPet/> </PrivateRoute> 
-                
-            },
-            {
-                path: "/dashboard/my-added-pet",
-                element:<MyAddPets></MyAddPets>
-                
-            },
-            {
-                path: "/dashboard/adoption-request",
-                element:<AdoptionRequest></AdoptionRequest>
-                
-            },
-            {
-                path: "/dashboard/donation-campaign",
-                element:<CreateDonationCampaign></CreateDonationCampaign>
-                
-            },
-            {
-                path: "/dashboard/my-donation-campaign",
-                element:<MyDonationCampaign></MyDonationCampaign>
-                
-            },
-            {
-                path: "/dashboard/my-donation",
-                element:<MyDonation></MyDonation>
-                
-            },
-        ]
-    }
-])
+  {
+    path: "/",
+    element: <Main></Main>,
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      {
+        path: "/",
+        element: <Home></Home>,
+      },
+      {
+        path: "/all-pets",
+        element: <AllPet></AllPet>,
+      },
+      {
+        path: "/donation-campaign",
+        element: <DonationCampaign></DonationCampaign>,
+      },
+      {
+        path: "/pet/:id",
+        element: <SinglePet></SinglePet>,
+      },
+      {
+        path: "/register",
+        element: <Register></Register>,
+      },
+      {
+        path: "/login",
+        element: <Login></Login>,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard></Dashboard>,
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      // {
+      //     path: "/dashboard/add-pet",
+      //     element:<PrivateRoute allowedRoles={["user","admin"]}><AddPet/> </PrivateRoute>
+
+      // },
+      {
+        path: "/dashboard/add-pet",
+        element: (
+          <PrivateRoute>
+            <AddPet />{" "}
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/my-added-pet",
+        element: (
+          <PrivateRoute>
+            <MyAddPets></MyAddPets>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/adoption-request",
+        element: (
+          <PrivateRoute>
+            <AdoptionRequest></AdoptionRequest>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/donation-campaign",
+        element: <CreateDonationCampaign></CreateDonationCampaign>,
+      },
+      {
+        path: "/dashboard/my-donation-campaign",
+        element: (
+          <PrivateRoute>
+            <MyDonationCampaign></MyDonationCampaign>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/my-donation",
+        element: (
+          <PrivateRoute>
+            <MyDonation></MyDonation>
+          </PrivateRoute>
+        ),
+      },
+    ],
+  },
+]);
 
 export default router;

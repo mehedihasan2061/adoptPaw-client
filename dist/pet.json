@@ -1,0 +1,60 @@
+[
+  {
+    "id": 1,
+    "img": "https://i.ibb.co.com/2NmZGX6/cat.jpg",
+    "name": "Whiskers",
+    "age": 2,
+    "location":"Netrokona",
+    "title": "Playful and Curious",
+    "description": "Whiskers is a 2-year-old playful cat who loves to explore and cuddle. He's great with kids and other pets.",
+    "category": "cat"
+  },
+  {
+    "id": 5,
+    "img": "https://i.ibb.co.com/2NmZGX6/cat.jpg",
+    "name": "Whiskers",
+    "age": 2,
+    "location":"Dhaka",
+    "title": "Playful and Curious",
+    "description": "Whiskers is a 2-year-old playful cat who loves to explore and cuddle. He's great with kids and other pets.",
+    "category": "cat"
+  },
+  {
+    "id": 1,
+    "img": "https://i.ibb.co.com/2NmZGX6/cat.jpg",
+    "name": "Whiskers",
+    "age": 2,
+    "title": "Playful and Curious",
+    "description": "Whiskers is a 2-year-old playful cat who loves to explore and cuddle. He's great with kids and other pets.",
+    "category": "cat"
+  },
+  {
+    "id": 6,
+    "img": "https://i.ibb.co.com/8z0dJNr/dog.jpg",
+    "name": "Buddy",
+    "age": 3,
+    "location":"Mymensingh",
+    "title": "Loyal and Friendly",
+    "description": "Buddy is a friendly 3-year-old dog who loves outdoor activities. He's well-trained and very loyal.",
+    "category": "dog"
+  },
+  {
+    "id": 3,
+    "img": "https://i.ibb.co.com/sHMxc4p/rabbit.jpg",
+    "name": "Hopper",
+    "age": 1,
+    "location":"Comilla",
+    "title": "Energetic and Fun",
+    "description": "Hopper is a 1-year-old rabbit with a lot of energy. He enjoys hopping around the house and loves being pet.",
+    "category": "rabbit"
+  },
+  {
+    "id": 4,
+    "img": "https://i.ibb.co.com/5hJvRmW/fish.jpg",
+    "name": "Goldie",
+    "age": 1,
+    "title": "Calm and Relaxing",
+    "description": "Goldie is a peaceful 1-year-old fish that adds a calming presence to any room. Easy to care for and great for beginners.",
+    "category": "fish"
+  }
+]

@@ -1,21 +1,56 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { CiNoWaitingSign } from "react-icons/ci";
 import { IoCheckmark } from "react-icons/io5";
 import { AuthContext } from "../../Provider/AuthProvider";
+import useAxiosCommon from "../../hooks/useAxiosCommon";
+import { useMutation, useQuery } from "@tanstack/react-query";
+
 
 const MyAddPets = () => {
-  const { user } = useContext(AuthContext);
-  const [data, setData] = useState([]);
+ const {user}=useContext(AuthContext)
+ 
+  const axiosCommon = useAxiosCommon()
+  
 
-  // Fetch user's added pets
-  useEffect(() => {
-    if (user && user._id) {
-      fetch(`http://localhost:5000/my-pets/${user._id}`)
-        .then((res) => res.json())
-        .then((data) => setData(data));
+const {
+  data: pets = [],
+  refetch,
+  isLoading,
+} = useQuery({
+  queryKey: ["my-added-pet", user?.email],
+  queryFn: async () => {
+    const { data } = await axiosCommon.get(`/my-added-pet/${user?.email}`);
+    console.log(data);
+    return data;
+  },
+});
+  console.log(pets);
+
+
+  // deleted pet method 
+  const { mutateAsync } = useMutation({
+    mutationFn: async (id) => {
+      const { data } = axiosCommon.delete(`/pet/${id}`);
+      return data;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success("Successfully deleted.");
+      refetch();
+    },
+  });
+
+  const handleDelete = async (id) => {
+    console.log(id);
+    try {
+      await mutateAsync(id);
+    } catch (err) {
+      console.log(err);
     }
-  }, [user]);
+  };
 
+ 
+if(isLoading)return <span className="loading loading-bars loading-lg"></span>;
   return (
     <section className="container px-2 mx-auto pt-12">
       <div className="flex items-center gap-x-3">
@@ -24,7 +59,7 @@ const MyAddPets = () => {
         </h2>
 
         <span className="px-2 py-1 text-xs text-blue-600 bg-blue-100 rounded-full ">
-          {data.length}
+          {pets.length}
         </span>
       </div>
 
@@ -56,7 +91,7 @@ const MyAddPets = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {data.map((pet, index) => (
+                  {pets.map((pet, index) => (
                     <tr key={pet._id}>
                       <td className="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
                         {index + 1}
@@ -94,7 +129,10 @@ const MyAddPets = () => {
 
                       <td className="px-4 py-4 text-sm whitespace-nowrap">
                         <div className="flex items-center gap-x-6">
-                          <button className="text-gray-500 transition-colors duration-200 hover:text-red-500 focus:outline-none">
+                          <button
+                            onClick={() => handleDelete(pet?._id)}
+                            className="text-gray-500 transition-colors duration-200 hover:text-red-500 focus:outline-none"
+                          >
                             {/* Delete icon */}
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -152,3 +190,5 @@ const MyAddPets = () => {
 };
 
 export default MyAddPets;
+
+

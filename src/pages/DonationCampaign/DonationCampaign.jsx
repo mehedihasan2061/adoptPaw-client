@@ -2,18 +2,27 @@ import React from 'react';
 import useCard from '../../hooks/useCard';
 import { FaLocationDot } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import useAxiosCommon from '../../hooks/useAxiosCommon';
 
 const DonationCampaign = () => {
-    const [pets] = useCard();
+  const axiosCommon=useAxiosCommon()
+   const { data: pets = [] } = useQuery({
+     queryKey: ["camapaign"],
+     queryFn: async () => {
+       const { data } = await axiosCommon.get("/campaign");
+       return data;
+     },
+   });
     return (
       <div className="grid md:grid-cols-3 lg:grid-cols-3 gap-10 ">
         {pets.map((item) => (
           <div
-            key={item.id}
+            key={item._id}
             className="max-w-sm mt-20 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
           >
             <a href="#">
-              <img className="rounded-t-lg" src={item.img} alt="" />
+              <img className="rounded-t-lg" src={item.image} alt="" />
             </a>
             <div className="p-5">
               <div className="flex justify-between items-center">
@@ -23,11 +32,11 @@ const DonationCampaign = () => {
               </div>
               <a href="#">
                 <h5 className="mb-2 text-xl  tracking-tight text-gray-900 dark:text-white">
-                  Max donation :$ {item.title}
+                  Max donation :$ {item.maxDonation}
                 </h5>
               </a>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                <span className='bg-gray-300 font-semibold p-1 rounded-lg'>Donate Amount:</span> $ {item.title}
+                <span className='bg-gray-300 font-semibold p-1 rounded-lg'>Donate Amount:</span> $ {item.petDonation}
               </p>
               <Link
                 to={`/donate/${item.id}`}

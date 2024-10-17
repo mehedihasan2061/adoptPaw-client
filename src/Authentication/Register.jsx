@@ -7,12 +7,8 @@ import { imgbbAPIKey } from "../pages/Dashboard/AddPet";
 import toast from "react-hot-toast";
 
 const Register = () => {
-  const {
-    signInWithGoogle,
-    createUser,
-    updateUserProfile,
-    setUser,
-  } = useContext(AuthContext);
+  const {  createUser, updateUserProfile, setUser } =
+    useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSignUp = (e) => {
@@ -57,10 +53,7 @@ const Register = () => {
               };
 
               // Update user profile in Firebase
-              updateUserProfile(
-                name,
-                profileImg,
-              ).then(() => {
+              updateUserProfile(name, profileImg).then(() => {
                 // Save user to the database
                 fetch("http://localhost:5000/users", {
                   method: "POST",
@@ -71,10 +64,8 @@ const Register = () => {
                 })
                   .then((res) => res.json())
                   .then(() => {
-                   
-                      toast.success("Account created successfully!");
-                      navigate("/", { replace: true });
-                   
+                    toast.success("Account created successfully!");
+                    navigate("/", { replace: true });
                   })
                   .catch((error) => {
                     console.error(error);
@@ -92,7 +83,7 @@ const Register = () => {
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Failed to upload image.",error);
+        toast.error("Failed to upload image.", error);
       });
   };
 

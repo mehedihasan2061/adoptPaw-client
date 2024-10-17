@@ -9,14 +9,15 @@ import CardItem from "../CardItem/CardItem";
 
 const Category = () => {
     const [tabIndex, setTabIndex] = useState(0);
-  const [pets] = useCard();
-  console.log(pets);
-  const cats = pets.filter((pet) => pet.category === "cat");
-  const dogs = pets.filter((pet) => pet.category === "dog");
-  const rabbits = pets.filter((pet) => pet.category === "rabbit");
-  const fish = pets.filter((pet) => pet.category === "fish");
+  const [pets,isLoading] = useCard();
+  
+  const cats = pets.filter((pet) => pet.category === "Cat");
+  const dogs = pets.filter((pet) => pet.category === "Dog");
+  const rabbits = pets.filter((pet) => pet.category === "Rabbit");
+  const fish = pets.filter((pet) => pet.category === "Fish");
   const horse = pets.filter((pet) => pet.category === "Horse");
-  console.log("cats", cats, "dogs", dogs, "rabbits", rabbits);
+  // console.log("cats---->", cats, "dogs", dogs, "rabbits", rabbits);
+  if(!pets && isLoading)return <span className="loading loading-bars loading-lg"></span>;
   return (
     <div>
       <Tabs defaultIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
@@ -41,19 +42,19 @@ const Category = () => {
           </TabList>
         </div>
         <TabPanel>
-          <CardItem items={cats}></CardItem>
+          <CardItem items={cats} ></CardItem>
         </TabPanel>
         <TabPanel>
-          <CardItem items={dogs}></CardItem>
+          <CardItem items={dogs} ></CardItem>
         </TabPanel>
         <TabPanel>
-          <CardItem items={rabbits}></CardItem>
+          <CardItem items={rabbits} ></CardItem>
         </TabPanel>
         <TabPanel>
-          <CardItem items={fish}></CardItem>
+          <CardItem items={fish} ></CardItem>
         </TabPanel>
         <TabPanel>
-          <CardItem items={horse}></CardItem>
+          <CardItem items={horse} ></CardItem>
         </TabPanel>
         {/* <TabPanel>
           <OrderCard items={drinks}></OrderCard>

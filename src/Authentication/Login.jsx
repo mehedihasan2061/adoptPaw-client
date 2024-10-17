@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 const Login = () => {
   const  navigate = useNavigate()
  
-    const {user,signIn}=useContext(AuthContext)
+    const { user, signIn, googleLogin } = useContext(AuthContext);
 
   // Email Password Signin
   const handleSignIn = async (e) => {
@@ -31,6 +31,17 @@ try {
 }
    
   };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await googleLogin()
+      toast.success("Login Successful")
+      navigate("/")
+    } catch (err) {
+      console.log(err);
+    }
+    
+  }
   
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-306px)] ">
@@ -73,7 +84,10 @@ try {
               </svg>
             </div>
 
-            <span className="w-5/6 px-4 py-3 font-bold text-center">
+            <span
+              onClick={handleGoogleSignIn}
+              className="w-5/6 px-4 py-3 font-bold text-center"
+            >
               Sign in with Google
             </span>
           </div>
@@ -136,7 +150,7 @@ try {
             <span className="w-1/5 border-b  md:w-1/4"></span>
 
             <Link
-              to="/registration"
+              to="/register"
               className="text-xs text-gray-500 uppercase  hover:underline"
             >
               or sign up

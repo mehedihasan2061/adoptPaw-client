@@ -1,137 +1,238 @@
-import React from 'react';
-import { useForm } from "react-hook-form";
-import Modal from "react-modal";
+import {
+  Button,
+  Description,
+  Field,
+  Fieldset,
+  Input,
+  Label,
+  Legend,
+  Select,
+  Textarea,
+} from "@headlessui/react";
+// import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import clsx from "clsx";
+import { useContext, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useNavigate } from "react-router-dom";
+import { imageUpload } from "../../Api/utils";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import toast from "react-hot-toast";
+import { AuthContext } from "../../Provider/AuthProvider";
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    padding: "30px",
-    marginRight: "-50%",
-    marginTop: "70px",
-    transform: "translate(-50%, -50%)",
-  },
-};
 const CreateDonationCampaign = () => {
+    const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const { user } = useContext(AuthContext)
+  const axiosSecure=useAxiosSecure()
+  const [imageText,setImageText]=useState("Upload Image")
+  const navigate=useNavigate()
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+   const { mutateAsync } = useMutation({
+     mutationFn: async (campaignData) => {
+       const { data } = await axiosSecure.post(`/campaign`, campaignData);
+       
+       return data;
+     },
+     onSuccess: () => {
+       console.log("Data Saved Successfully");
+       toast.success("Campaign Added Successfully!");
+       navigate("/dashboard/my-donation-campaign");
+        
+     },
+   });
 
-  const onSubmit = (data) => console.log(data);
+  const handleCampaign =async e => {
+    e.preventDefault()
+    console.log("clicked");
+    const form = e.target;
+    const image = form.image.files[0];
+    const name = form.name.value;
+    const maxDonation = form.maxDonation.value;
+    const petDonation = form.petDonation.value;
+    const startDeadline = startDate;
+    const endDeadline= endDate;
+    const longDescription = form.longDescription.value;
+    const shortDescription = form.shortDescription.value;
+    
+    
 
-  console.log(watch("example"));
+    const campaignUser = {
+      name: user?.displayName,
+      image:user?.photoURL,
+      email:user?.email
+      
+    }
+    console.log(campaignUser);
+    try {
+      const imageUrl = await imageUpload(image);
+      console.log("link img",imageUrl);
+    const campaignData = {
+      image: imageUrl,
+      name,
+      maxDonation,
+      petDonation,
+      startDeadline,
+      endDeadline,
+      longDescription,
+      shortDescription,
+      campaignUser,
+      };
+      if(parseInt(petDonation) > parseInt(maxDonation) )return toast.error("PetDonation range cross.please Don't Cross Your Limit")
+      // console.table(campaignData);
+      await mutateAsync(campaignData);
 
-  let subtitle;
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-
-  function openModal() {
-    setIsOpen(true);
+    } catch (err) {
+      console.log(err);
+}
+  }
+  const handleImageText =async (image) => {
+   await setImageText(image.name)
   }
 
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    subtitle.style.color = "#f00";
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-    return (
-      <div className="m-20">
-        <h1 className=" my-4 text-xl font-bold text-blue-500">
-          Donation Campaign
-        </h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Name */}
-          <div>
-            <label htmlFor="name">Name</label> <br />
-            <input
+  return (
+    <div className="w-full max-w-lg px-4 overflow-x-auto">
+      <form onSubmit={handleCampaign}>
+        <Fieldset className="space-y-6 rounded-xl  p-6 sm:p-10  bg-gradient-to-r from-blue-500 to-[#0C0D21]">
+          <Legend className=" font-semibold text-2xl text-center text-white">
+            Create Donation Campaign
+          </Legend>
+          <Field>
+            <div className=" p-4 bg-white w-full  m-auto rounded-lg">
+              <div className="file_upload px-5 py-3 relative border-4 border-dotted border-gray-300 rounded-lg">
+                <div className="flex flex-col w-max mx-auto text-center">
+                  <label>
+                    <input
+                      onChange={(e) => handleImageText(e.target.files[0])}
+                      className="text-sm cursor-pointer w-36 hidden"
+                      type="file"
+                      name="image"
+                      id="image"
+                      accept="image/*"
+                      hidden
+                    />
+                    <div className="bg-rose-500 text-white border border-gray-300 rounded  font-semibold cursor-pointer p-1 px-3 hover:bg-rose-500">
+                      {/* {imageText} */}
+                      {imageText.length > 20
+                        ? imageText.split(".")[0].slice(0, 15) +
+                          "...." +
+                          imageText.split(".")[1]
+                        : imageText}
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </Field>
+          <Field>
+            <Label className="text-sm/6 font-medium text-white">
+              Pet Name
+            </Label>
+            <Input
+              className={clsx(
+                "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
+              )}
+              name="name"
               id="name"
               type="text"
-              className="form-control border border-black"
-              {...register("name", {
-                required: "Name is required",
-              })}
+              
             />
-            {errors.name && (
-              <p className="text-red-600">{errors.name.message}</p>
-            )}
-          </div>
+          </Field>
+          <div className="grid grid-cols-2 gap-4">
+            <Field>
+              <Label className="text-sm/6 font-medium text-white">
+                Max Donation
+              </Label>
+              <Input
+                className={clsx(
+                  "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                  "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
+                )}
+                name="maxDonation"
+                id="donation"
+                type="text"
+                defaultValue={"100000"}
+              />
+            </Field>
+            <Field>
+              <Label className="text-sm/6 font-medium text-white">
+                Pet Donation
+              </Label>
+              <Input
+                className={clsx(
+                  "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                  "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
+                )}
+                name="petDonation"
+                id="donation"
+                type="text"
+              />
+            </Field>
 
-          {/* Email */}
-          <div>
-            <label htmlFor="email">Email</label> <br />
-            <input
-              id="email"
-              type="email"
-              className="form-control border border-black"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                  message: "Enter a valid email",
-                },
-              })}
-            />
-            {errors.email && (
-              <p className="text-red-600">{errors.email.message}</p>
-            )}
-          </div>
+            <div className="flex flex-col gap-2 ">
+              <label className="text-white">Start Date</label>
 
-          {/* Phone */}
-          <div>
-            <label htmlFor="phone">Phone Number</label> <br />
-            <input
-              id="phone"
-              type="tel"
-              className="form-control border border-black"
-              {...register("phone", {
-                required: "Phone number is required",
-                pattern: {
-                  value: /^[0-9]{10,15}$/,
-                  message: "Enter a valid phone number",
-                },
-              })}
-            />
-            {errors.phone && (
-              <p className="text-red-600">{errors.phone.message}</p>
-            )}
-          </div>
+              {/* Date Picker Input Field */}
+              <DatePicker
+                className="border-none text-white p-2 rounded-md bg-[#3B6EC7]"
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+              />
+            </div>
+            <div className="flex flex-col gap-2 ">
+              <label className="text-white">End Date</label>
+              <DatePicker
+                className="border-none text-white p-2 rounded-md bg-[#121D3E]"
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+              />
+            </div>
+            <Field>
+              <Label className="text-sm/6 font-medium text-white">
+                Short Description
+              </Label>
 
-          {/* Address */}
-          <div>
-            <label htmlFor="address">Address</label> <br />
-            <textarea
-              id="address"
-              className=" ml-2 my-2form-control border border-black"
-              {...register("address", {
-                required: "Address is required",
-              })}
-            />
-            {errors.address && (
-              <p className="text-red-600"> {errors.address.message}</p>
-            )}
-          </div>
-          <div className='my-6'>
-             <input type="file" id="myFile" name="filename"/>
-          </div>
+              <Textarea
+                className={clsx(
+                  "mt-3 block w-full resize-none rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                  "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
+                )}
+                name="longDescription"
+                id="longDescription"
+                type="text"
+                placeholder="Short Description"
+                rows={3}
+              />
+            </Field>
+            <Field>
+              <Label className="text-sm/6 font-medium text-white">
+                Long Description
+              </Label>
 
-          {/* Submit Button */}
-          <button
-            className="bg-blue-500 text-white px-6 py-2 text-center hover:bg-blue=800 rounded-lg hover:font-bold"
+              <Textarea
+                className={clsx(
+                  "mt-3 block w-full resize-none rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                  "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
+                )}
+                name="shortDescription"
+                id="shortDescription"
+                type="text"
+                placeholder="Long Description"
+                rows={3}
+              />
+            </Field>
+          </div>
+          <Button
             type="submit"
+            className="inline-flex justify-center items-center gap-2 w-full text-center rounded-md bg-blue-500 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-blue-600 data-[open]:bg-blue-700 data-[focus]:outline-1 data-[focus]:outline-white"
           >
             Submit
-          </button>
-        </form>
-      </div>
-    );
+          </Button>
+        </Fieldset>
+      </form>
+    </div>
+  );
 };
-
 export default CreateDonationCampaign;
