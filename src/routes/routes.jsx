@@ -15,6 +15,7 @@ import MyDonation from "../pages/Dashboard/MyDonation";
 import DonationCampaign from "../pages/DonationCampaign/DonationCampaign";
 import ErrorPage from "../pages/ErrorPage";
 import PrivateRoute from "../Provider/PrivateRoute";
+import ManageUser from "../pages/Dashboard/ManageUser";
 
 const router = createBrowserRouter([
   {
@@ -99,6 +100,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <MyDonation></MyDonation>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/manage-user",
+        element: (
+          <PrivateRoute>
+            <ManageUser></ManageUser>
           </PrivateRoute>
         ),
       },

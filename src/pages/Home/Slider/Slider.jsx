@@ -13,7 +13,7 @@ const Slider = () => {
   return (
     <div>
       <Carousel>
-        <div>
+        <div className="h-[300px]">
           <img src={img1} />
         </div>
         <div>
@@ -30,20 +30,7 @@ const Slider = () => {
         </div>
         
       </Carousel>
-      {/* <Carousel>
-        <div>
-          <img src={img5} />
-          <p className="legend">Legend 1</p>
-        </div>
-        <div>
-          <img src="assets/2.jpeg" />
-          <p className="legend">Legend 2</p>
-        </div>
-        <div>
-          <img src="assets/3.jpeg" />
-          <p className="legend">Legend 3</p>
-        </div>
-      </Carousel> */}
+      
     </div>
   );
 };

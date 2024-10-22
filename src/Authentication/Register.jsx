@@ -5,10 +5,10 @@ import { useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
 import { imgbbAPIKey } from "../pages/Dashboard/AddPet";
 import toast from "react-hot-toast";
+import { TbFidgetSpinner } from "react-icons/tb";
 
 const Register = () => {
-  const {  createUser, updateUserProfile, setUser } =
-    useContext(AuthContext);
+  const { createUser, updateUserProfile, setUser,loading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSignUp = (e) => {
@@ -30,13 +30,13 @@ const Register = () => {
     })
       .then((res) => res.json())
       .then((imgData) => {
-        console.log(imgData.success);
+        
         if (imgData?.success) {
           const profileImg = imgData.data.url;
           const userInfo = {
-            displayName: name,
+            name: name,
             email: email,
-            photoURL: profileImg,
+            image: profileImg,
           };
 
           // Create user with email and password
@@ -45,17 +45,17 @@ const Register = () => {
               const newUser = result.user;
               const uid = newUser.uid;
 
-              // Prepare user data for the database
+            
               const dbUser = {
                 ...userInfo,
                 uid: uid,
-                role: "user", // Set default role as "user"
+                role: "user", 
               };
-
+              console.log(import.meta.env.VITE_API_URL);
               // Update user profile in Firebase
               updateUserProfile(name, profileImg).then(() => {
                 // Save user to the database
-                fetch("http://localhost:5000/users", {
+                fetch("https://adopt-paw-server.vercel.app/users", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -160,12 +160,16 @@ const Register = () => {
               />
             </div>
             <div className="mt-6">
-              <button
-                type="submit"
-                className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize bg-gray-800 rounded-lg"
-              >
-                Sign Up
-              </button>
+              
+                <button
+                  type="submit"
+                  className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize bg-gray-800 rounded-lg"
+                >
+                   {loading ? (
+                <TbFidgetSpinner className="animate-spin m-auto"></TbFidgetSpinner>
+              ) :"Sign Up"}
+                </button>
+              
             </div>
           </form>
           <div className="flex items-center justify-between mt-4">

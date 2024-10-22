@@ -60,11 +60,11 @@ const AuthProvider = ({ children }) => {
       setLoading(false)
       console.log("on Auth state change", currentUser);
       setUser(currentUser)
-      // fetch(`https://adopt-paw-server-e3ype2o73-mehedihasan2061s-projects.vercel.app/users/${currentUser.uid}`)
-      //   .then(res => res.json())
+      // fetch(`http://localhost:5000/users/${currentUser.uid}`)
+      //   .then((res) => res.json())
       //   .then((data) => {
-      //    setUser(data);
-      // })
+      //     setUser(data);
+      //   });
       // setUser(currentUser.uid);
       setLoading(false);
     });

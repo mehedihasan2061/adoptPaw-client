@@ -78,7 +78,7 @@ const AdoptItem = ({id}) => {
                 <span>{pet?.location}</span>
               </div>
               <div className="flex justify-between items-center mr-32 mt-3">
-                <h1 className="text-[20px] font-bold">Details: </h1>
+                <h1 className="text-[20px] font-bold">Description: </h1>
                 <span>{pet?.shortDescription}</span>
               </div>
              

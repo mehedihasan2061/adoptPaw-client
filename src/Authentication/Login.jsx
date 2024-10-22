@@ -5,12 +5,14 @@ import logo from "../assets/logo/images-removebg-preview.png"
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
 import toast from "react-hot-toast";
+import useAxiosCommon from "../hooks/useAxiosCommon";
+import { TbFidgetSpinner } from "react-icons/tb";
 
 
 const Login = () => {
   const  navigate = useNavigate()
- 
-    const { user, signIn, googleLogin } = useContext(AuthContext);
+  const axiosCommon=useAxiosCommon()
+    const { user,loading, signIn, googleLogin } = useContext(AuthContext);
 
   // Email Password Signin
   const handleSignIn = async (e) => {
@@ -34,7 +36,14 @@ try {
 
   const handleGoogleSignIn = async () => {
     try {
-      await googleLogin()
+      const {user} = await googleLogin()
+      console.log(user);
+      const userData = {
+        name: user?.displayName,
+        email: user?.email,
+        image:user?.photoURL
+      }
+     await axiosCommon.post("/users",userData)
       toast.success("Login Successful")
       navigate("/")
     } catch (err) {
@@ -141,7 +150,7 @@ try {
                 type="submit"
                 className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50"
               >
-                Sign In
+               {loading ? <TbFidgetSpinner className="animate-spin m-auto"></TbFidgetSpinner>:  "Sign In"}
               </button>
             </div>
           </form>
